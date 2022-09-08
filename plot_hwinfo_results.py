@@ -23,9 +23,8 @@ def clean_footer(df):
 
 def clean_dates(df):
     '''Replaces date & time strings with a datetime column.'''
-    print('Cleaning date formatting')
-    df.insert(0, "Datetime", (df["Date"] + " " + df["Time"]))
-    df["Datetime"] = pd.to_datetime(df["Datetime"], format='%d.%m.%Y %H:%M:%S.%f')
+    print('Cleaning date formatting')    
+    df["Datetime"] = pd.to_datetime((df["Date"] + " " + df["Time"]), format='%d.%m.%Y %H:%M:%S.%f')
     df.drop(columns = ['Date', 'Time'])
     return df
 
