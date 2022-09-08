@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Tool for plotting interesting stats from HWiNFO64. The expected input is a CSV file from HWiNFO64.
+Tool for plotting information recorded by HWiNFO64. The expected input is a CSV file from HWiNFO64.
 
 You can explore variables using the varlist_... functions
 
@@ -12,7 +12,6 @@ By default, this tool will create plots for...
 import pandas as pd
 #import numpy as np
 #import matplotlib.pyplot as plt  #see https://matplotlib.org/
-#import time
 
 def clean_footer(df):
     '''Remove the footer rows (2 by default) and NaN column (1 by default)'''
@@ -68,7 +67,7 @@ def varlist_bool(data):
             print(data.head(0)[i].name)
 
 #define user-selectable input variables
-filename = 'raw_data\Owl_234154_prime95.CSV'
+filename = 'raw_data\Owl_prime95.CSV'
 
 data = load_data(filename)
 print(data)
