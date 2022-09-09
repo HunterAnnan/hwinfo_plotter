@@ -10,7 +10,7 @@ By default, this tool will create plots for...
 """
 
 import pandas as pd
-#import numpy as np
+# import numpy as np
 #import matplotlib.pyplot as plt  #see https://matplotlib.org/
 
 #suppress pandas PerformanceWarning
@@ -36,10 +36,10 @@ def clean_dates(df):
 
 # def clean_dtypes(df):
 #     '''Try some different dtypes and ... [needs completing]'''
-#     for i, val in enumerate(data.iloc[1:1,:]):
-#         if val.isdigit():
-#             data.iloc[i] = astype(data.iloc[i])
-        #neeeeeds review
+#     for i, val in enumerate(df.iloc[0:1, -5:]):
+#         if df.iloc[0,i].lower() == 'yes' or df.iloc[0,i].lower() == 'no':
+            
+#     return df
 
 def load_data(filename):
     '''Loads csv data into a pandas dataframe, then cleans it up\n
@@ -51,36 +51,49 @@ def load_data(filename):
         df = pd.read_csv(filename, low_memory=False)
     df = clean_footer(df)
     #after removing problem cols/rows, we re-interpret object types:
-    df = df.convert_dtypes(convert_string=False) #needs replacing with a function...
     df = clean_dates(df)
+    df = df.convert_dtypes()
+    # df = clean_dtypes(df)
     
     return df
 
-def varlist_temp(data, silent=False):
-    '''Data exploring:\n
+def varlist_temp(df, silent=True):
+    '''Data exploring: Temperature\n
     Adds variables of particular interest that can be read from the .CSV to a
     dictionary with matched datatypes. Use silent=False to print the variables.'''
     dict_tempvars = {}
     for i, val in enumerate(data.columns[:]):
         if u'\N{DEGREE SIGN}' in str(val):
-            dict_tempvars[val] = type(data.iloc[i, 1])
-            if silent == True:
+            if df.iloc[0,i].isdigit():
+                dict_tempvars[val] = "int64"
+            else:
+                dict_tempvars[val] = "float64"
+            if silent == False:
                 print(i)
     print(dict_tempvars)
             
-def varlist_power(data):
-    '''Data exploring:\n
-    Lists all of the power & voltage variables that can be read from the csv'''
-    for i in data.columns[:]:
-        if '[w]' in str(i).lower():
-            print(i)
+# def varlist_power(df, silent=True):
+#     '''Data exploring: Power\n
+#     Adds variables of particular interest that can be read from the .CSV to a
+#     dictionary with matched datatypes. Use silent=False to print the variables.'''
+#     for i, val in enumerate(df.columns[:]):
+#         if '[w]' in str(i).lower():
+#             ###
+#             if silent == False:
+#                 print(i)
+#     print(dict_tempvars)
             
-def varlist_bool(data):
+def varlist_bool(df, silent=True):
     '''Data exploring:\n
     Lists some boolean indicators that can be read from the csv'''
-    for i in data.columns[:]:
-        if 'no' in str(i).lower() or 'yes' in str(i).lower():
-            print(data.head(0)[i].name)
+    dict_tempvars = {}
+    for i, val in enumerate(df.columns[:]):
+        if 'no' in str(val).lower() or 'yes' in str(val).lower():
+            dict_tempvars[val] = 'bool'
+            if silent == False:
+                print(df.head(0)[val].name)
+    print(dict_tempvars)
+    
 
 #define user-selectable input variables
 filename = 'raw_data\Owl_prime95.CSV'
@@ -90,4 +103,5 @@ data = load_data(filename)
 # print(data.dtypes)
 # print(data.iloc[0:1])
 # varlist_bool(data)
-
+varlist_temp(data)
+# varlist_power(data)
