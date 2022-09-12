@@ -92,11 +92,22 @@ def varlist_bool(df, dict_vars, silent=True):
             if silent == False:
                 print(val)
 
+def varlist_usage(df, dict_vars, silent=True):
+    for i, val in enumerate(data.columns[:]):
+        if '%' in str(val) or '[mb]' in str(val).lower() or '[gb]' in str(val).lower():
+            if df.iloc[0,i].isdigit():
+                dict_vars[val] = "int64"
+            else:
+                dict_vars[val] = "float64"
+            if silent == False:
+                print(val)
+
 def build_varlist(df, silent=True):
     dict_vars = {}
     varlist_temp(df, dict_vars, silent)
     varlist_power(df, dict_vars, silent)
     varlist_bool(df, dict_vars, silent)
+    varlist_usage(df, dict_vars, silent)
     print(dict_vars)
 
 #define user-selectable input variables
