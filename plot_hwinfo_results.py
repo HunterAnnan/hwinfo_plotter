@@ -68,20 +68,20 @@ def varlist_temp(df, dict_vars, silent=True):
             else:
                 dict_vars[val] = "float64"
             if silent == False:
-                print(i)
+                print(val)
             
 def varlist_power(df, dict_vars, silent=True):
     '''Data exploring: Power\n
     Adds variables of particular interest that can be read from the .CSV to a
     dictionary with matched datatypes. Use silent=False to print the variables.'''
     for i, val in enumerate(df.columns[:]):
-        if '[w]' in str(i).lower():
+        if '[w]' in str(val).lower() or '[v]' in str(val).lower():
             if df.iloc[0,i].isdigit():
                 dict_vars[val] = "int64"
             else:
                 dict_vars[val] = "float64"
             if silent == False:
-                print(i)
+                print(val)
             
 def varlist_bool(df, dict_vars, silent=True):
     '''Data exploring:\n
@@ -90,7 +90,7 @@ def varlist_bool(df, dict_vars, silent=True):
         if 'no' in str(val).lower() and 'yes' in str(val).lower():
             dict_vars[val] = 'bool'
             if silent == False:
-                print(df.head(0)[val].name)
+                print(val)
 
 def build_varlist(df, silent=True):
     dict_vars = {}
