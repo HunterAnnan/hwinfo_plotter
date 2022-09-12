@@ -57,43 +57,47 @@ def load_data(filename):
     
     return df
 
-def varlist_temp(df, silent=True):
+def varlist_temp(df, dict_vars, silent=True):
     '''Data exploring: Temperature\n
     Adds variables of particular interest that can be read from the .CSV to a
     dictionary with matched datatypes. Use silent=False to print the variables.'''
-    dict_tempvars = {}
     for i, val in enumerate(data.columns[:]):
         if u'\N{DEGREE SIGN}' in str(val):
             if df.iloc[0,i].isdigit():
-                dict_tempvars[val] = "int64"
+                dict_vars[val] = "int64"
             else:
-                dict_tempvars[val] = "float64"
+                dict_vars[val] = "float64"
             if silent == False:
                 print(i)
-    print(dict_tempvars)
             
-# def varlist_power(df, silent=True):
-#     '''Data exploring: Power\n
-#     Adds variables of particular interest that can be read from the .CSV to a
-#     dictionary with matched datatypes. Use silent=False to print the variables.'''
-#     for i, val in enumerate(df.columns[:]):
-#         if '[w]' in str(i).lower():
-#             ###
-#             if silent == False:
-#                 print(i)
-#     print(dict_tempvars)
+def varlist_power(df, dict_vars, silent=True):
+    '''Data exploring: Power\n
+    Adds variables of particular interest that can be read from the .CSV to a
+    dictionary with matched datatypes. Use silent=False to print the variables.'''
+    for i, val in enumerate(df.columns[:]):
+        if '[w]' in str(i).lower():
+            if df.iloc[0,i].isdigit():
+                dict_vars[val] = "int64"
+            else:
+                dict_vars[val] = "float64"
+            if silent == False:
+                print(i)
             
-def varlist_bool(df, silent=True):
+def varlist_bool(df, dict_vars, silent=True):
     '''Data exploring:\n
     Lists some boolean indicators that can be read from the csv'''
-    dict_tempvars = {}
     for i, val in enumerate(df.columns[:]):
-        if 'no' in str(val).lower() or 'yes' in str(val).lower():
-            dict_tempvars[val] = 'bool'
+        if 'no' in str(val).lower() and 'yes' in str(val).lower():
+            dict_vars[val] = 'bool'
             if silent == False:
                 print(df.head(0)[val].name)
-    print(dict_tempvars)
-    
+
+def build_varlist(df, silent=True):
+    dict_vars = {}
+    varlist_temp(df, dict_vars, silent)
+    varlist_power(df, dict_vars, silent)
+    varlist_bool(df, dict_vars, silent)
+    print(dict_vars)
 
 #define user-selectable input variables
 filename = 'raw_data\Owl_prime95.CSV'
@@ -102,6 +106,5 @@ data = load_data(filename)
 
 # print(data.dtypes)
 # print(data.iloc[0:1])
-# varlist_bool(data)
-varlist_temp(data)
-# varlist_power(data)
+
+build_varlist(data)
