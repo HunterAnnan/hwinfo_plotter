@@ -11,7 +11,8 @@ By default, this tool will create plots for...
 
 import pandas as pd
 #import numpy as np
-#import matplotlib.pyplot as plt  #see https://matplotlib.org/
+import matplotlib.pyplot as plt  #see https://matplotlib.org/
+import matplotlib.dates as mdate
 import time
 
 start = time.time()
@@ -25,15 +26,15 @@ def load_data(filename):
     Input expected: HWiNFO .CSV export'''
     print('Reading .CSV import')
     try: #ANSI is the correct encoding for HWiNFO 7.26; other versions may differ
-        df = pd.read_csv(filename, encoding='ANSI', low_memory=False)
+        df = pd.read_csv(filename, encoding='ANSI', dtype='object', low_memory=False)
     except UnicodeDecodeError:
-        df = pd.read_csv(filename, low_memory=False)
+        df = pd.read_csv(filename, dtype='object', low_memory=False)
     df = clean_footer(df) #should be handled by read_csv, but 'c' engine doesn't allow skipfooter
     #after removing problem cols/rows, we re-interpret object types:
     df = clean_dates(df) #dates to datetime64
     dict_vars={}
     dict_vars = build_varlist(df, dict_vars) #build dict of many variables & interpreted types
-    # df = df.astype(dict_vars) #convert dtypes using above-built dict 
+    df = df.astype(dict_vars) #convert dtypes using above-built dict 
     return df
 
 def clean_footer(df):
@@ -62,7 +63,7 @@ def build_varlist(df, dict_vars, convert_bools=True, silent=True):
     print("Building a list of variables & mapping data types")
     varlist_temp(df, dict_vars, silent)
     varlist_power(df, dict_vars, silent)
-    varlist_usage(df, dict_vars, silent)
+    varlist_usage(df, dict_vars, silent=False)
     varlistfix_bool(df, dict_vars, convert_bools, silent)
     print("Variable list built; data types mapped")
     return dict_vars
@@ -126,9 +127,29 @@ def varlistfix_bool(df, dict_vars, convert_bools=True, silent=True):
 
 #define user-selectable input variables
 
-filename = 'raw_data\Owl_prime95.CSV'
-
+filename = 'raw_data\lowramtest_E2000.CSV'
+date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 data = load_data(filename)
+
+plt.close('all')
+plt.rc('font', size=20)
+
+fig, ax1 = plt.subplots()
+ax1.scatter(data['Datetime'], data['Virtual Memory Load [%]'], s=3, c='blue', label = 'Virtual Memory')
+ax1.xaxis.set_major_formatter(date_fmt)
+ax1.set_ylabel('Memory Load / %')
+ax2 = ax1.twinx()
+ax2.scatter(data['Datetime'], data['Physical Memory Load [%]'], s=3, c='red', label = 'Physical Memory')
+# ax2.set_ylabel('Physical Memory Load / %')
+
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+lines = lines1 + lines2
+labels = labels1 + labels2
+plt.legend(lines, labels, loc = 'upper right', scatterpoints = 7)
+
+plt.show()
+
 
 end = time.time()
 print("Program completed in "
