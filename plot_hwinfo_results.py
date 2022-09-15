@@ -52,7 +52,8 @@ def load_data(filename):
     df = clean_footer(df)
     #after removing problem cols/rows, we re-interpret object types:
     df = clean_dates(df)
-    df = df.convert_dtypes()
+    build_varlist(df)
+    # df = df.convert_dtypes()
     # df = clean_dtypes(df)
     
     return df
@@ -61,7 +62,7 @@ def varlist_temp(df, dict_vars, silent=True):
     '''Temperature data: 
     Add temperature variables from import .CSV to a dict with matched datatypes.\n
     Use silent=False to print the variables.'''
-    for i, val in enumerate(data.columns[:]):
+    for i, val in enumerate(df.columns[:]):
         if u'\N{DEGREE SIGN}' in str(val):
             if df.iloc[0,i].isdigit():
                 dict_vars[val] = "int64"
@@ -85,9 +86,9 @@ def varlist_power(df, dict_vars, silent=True):
                 
 def varlist_usage(df, dict_vars, silent=True):
     '''Usage data: 
-    Add usage variables from import .CSV to a dict with matched datatypes.\n
+    Add usage (% & byte) variables from import .CSV to a dict with matched datatypes.\n
     Use silent=False to print the variables.'''
-    for i, val in enumerate(data.columns[:]):
+    for i, val in enumerate(df.columns[:]):
         if '%' in str(val) or '[mb]' in str(val).lower() or '[gb]' in str(val).lower():
             if df.iloc[0,i].isdigit():
                 dict_vars[val] = "int64"
@@ -111,12 +112,15 @@ def varlistfix_bool(df, dict_vars, convert_bools=True, silent=True):
             if silent == False:
                 print(val)
 
-def build_varlist(df, silent=True):
+def build_varlist(df, convert_bools=True, silent=True):
+    '''Builds a list of variables from import .CSV in a dictionary with matched datatypes. 
+    Use convert_bools=False to keep bool values as str.
+    Use silent=False to print the variables.'''
     dict_vars = {}
     varlist_temp(df, dict_vars, silent)
     varlist_power(df, dict_vars, silent)
-    varlist_usage(df, dict_vars, silent=False)
-    varlistfix_bool(df, dict_vars, silent)
+    varlist_usage(df, dict_vars, silent)
+    varlistfix_bool(df, dict_vars, convert_bools, silent)
     print(dict_vars)
 
 #define user-selectable input variables
@@ -124,7 +128,5 @@ filename = 'raw_data\Owl_prime95.CSV'
 
 data = load_data(filename)
 
-# print(data.dtypes)
+print(data.dtypes)
 # print(data.iloc[0:1])
-
-build_varlist(data)
