@@ -12,6 +12,9 @@ By default, this tool will create plots for...
 import pandas as pd
 #import numpy as np
 #import matplotlib.pyplot as plt  #see https://matplotlib.org/
+import time
+
+start = time.time()
 
 #suppress pandas PerformanceWarning
 from warnings import simplefilter
@@ -25,7 +28,7 @@ def load_data(filename):
         df = pd.read_csv(filename, encoding='ANSI', low_memory=False)
     except UnicodeDecodeError:
         df = pd.read_csv(filename, low_memory=False)
-    df = clean_footer(df)
+    df = clean_footer(df) #should be handled by read_csv, but 'c' engine doesn't allow skipfooter
     #after removing problem cols/rows, we re-interpret object types:
     df = clean_dates(df) #dates to datetime64
     dict_vars={}
@@ -127,5 +130,8 @@ filename = 'raw_data\Owl_prime95.CSV'
 
 data = load_data(filename)
 
-# print(data)
-# print(data.iloc[0:1])
+end = time.time()
+print("Program completed in "
+      + str(end-start)
+      + " seconds."
+      )
