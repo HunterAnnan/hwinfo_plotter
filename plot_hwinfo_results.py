@@ -10,7 +10,7 @@ By default, this tool will create plots for...
 """
 
 import pandas as pd
-# import numpy as np
+#import numpy as np
 #import matplotlib.pyplot as plt  #see https://matplotlib.org/
 
 #suppress pandas PerformanceWarning
@@ -30,10 +30,7 @@ def load_data(filename):
     df = clean_dates(df) #dates to datetime64
     dict_vars={}
     dict_vars = build_varlist(df, dict_vars) #build dict of many variables & interpreted types
-    df = df.astype(dict_vars) #convert dtypes using above-built dict
-    
-    # df = df.convert_dtypes()
-    # df = clean_dtypes(df)  
+    # df = df.astype(dict_vars) #convert dtypes using above-built dict 
     return df
 
 def clean_footer(df):
@@ -52,12 +49,8 @@ def clean_dates(df):
     df["Datetime"] = pd.to_datetime((df["Date"] + " " + df["Time"]), 
                                     format='%d.%m.%Y %H:%M:%S.%f'
                                     )
-    df.drop(columns = ["Date", "Time"])
+    df.drop(columns = ["Date", "Time"], inplace = True)
     return df
-
-# def clean_dtypes(df):
-#     '''Try some different dtypes and ... [needs completing]'''
-#     return df
 
 def build_varlist(df, dict_vars, convert_bools=True, silent=True):
     '''Builds a list of variables from import .CSV in a dictionary with matched datatypes. 
@@ -68,6 +61,7 @@ def build_varlist(df, dict_vars, convert_bools=True, silent=True):
     varlist_power(df, dict_vars, silent)
     varlist_usage(df, dict_vars, silent)
     varlistfix_bool(df, dict_vars, convert_bools, silent)
+    print("Variable list built; data types mapped")
     return dict_vars
 
 def varlist_temp(df, dict_vars, silent=True):
@@ -123,16 +117,15 @@ def varlistfix_bool(df, dict_vars, convert_bools=True, silent=True):
         if 'no' in str(val).lower() and 'yes' in str(val).lower():
             dict_vars[val] = 'bool'
             if convert_bools == True:
-                # df[val] = df[val].astype(bool)
-                df = df.replace({val: {'Yes': True, 'No': False}})
-                # print(df[val][2]) # TESTER
+                df[val] = df[val].replace({'Yes': True, 'No': False})
             if silent == False:
                 print(val)
 
 #define user-selectable input variables
+
 filename = 'raw_data\Owl_prime95.CSV'
 
 data = load_data(filename)
 
-# print(data.dtypes)
+# print(data)
 # print(data.iloc[0:1])
