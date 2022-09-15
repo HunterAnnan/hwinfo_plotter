@@ -58,9 +58,9 @@ def load_data(filename):
     return df
 
 def varlist_temp(df, dict_vars, silent=True):
-    '''Data exploring: Temperature\n
-    Adds variables of particular interest that can be read from the .CSV to a
-    dictionary with matched datatypes. Use silent=False to print the variables.'''
+    '''Temperature data: 
+    Add temperature variables from import .CSV to a dict with matched datatypes.\n
+    Use silent=False to print the variables.'''
     for i, val in enumerate(data.columns[:]):
         if u'\N{DEGREE SIGN}' in str(val):
             if df.iloc[0,i].isdigit():
@@ -71,9 +71,9 @@ def varlist_temp(df, dict_vars, silent=True):
                 print(val)
             
 def varlist_power(df, dict_vars, silent=True):
-    '''Data exploring: Power\n
-    Adds variables of particular interest that can be read from the .CSV to a
-    dictionary with matched datatypes. Use silent=False to print the variables.'''
+    '''Power & Voltage data: 
+    Add power & voltage variables from import .CSV to a dict with matched datatypes.\n
+    Use silent=False to print the variables.'''
     for i, val in enumerate(df.columns[:]):
         if '[w]' in str(val).lower() or '[v]' in str(val).lower():
             if df.iloc[0,i].isdigit():
@@ -82,17 +82,11 @@ def varlist_power(df, dict_vars, silent=True):
                 dict_vars[val] = "float64"
             if silent == False:
                 print(val)
-            
-def varlist_bool(df, dict_vars, silent=True):
-    '''Data exploring:\n
-    Lists some boolean indicators that can be read from the csv'''
-    for i, val in enumerate(df.columns[:]):
-        if 'no' in str(val).lower() and 'yes' in str(val).lower():
-            dict_vars[val] = 'bool'
-            if silent == False:
-                print(val)
-
+                
 def varlist_usage(df, dict_vars, silent=True):
+    '''Usage data: 
+    Add usage variables from import .CSV to a dict with matched datatypes.\n
+    Use silent=False to print the variables.'''
     for i, val in enumerate(data.columns[:]):
         if '%' in str(val) or '[mb]' in str(val).lower() or '[gb]' in str(val).lower():
             if df.iloc[0,i].isdigit():
@@ -101,13 +95,28 @@ def varlist_usage(df, dict_vars, silent=True):
                 dict_vars[val] = "float64"
             if silent == False:
                 print(val)
+            
+def varlistfix_bool(df, dict_vars, convert_bools=True, silent=True):
+    '''Boolean data: 
+    Add boolean variables from import .CSV to a dict with matched datatypes.
+    Additionally convert string bools to actual boolean values.\n
+    Use convert_bools=False to keep bool values as str.
+    Use silent=False to print the variables.'''
+    for i, val in enumerate(df.columns[:]):
+        if 'no' in str(val).lower() and 'yes' in str(val).lower():
+            dict_vars[val] = 'bool'
+            df[val] = df[val].astype(bool)
+            if convert_bools == True:
+                df = df.replace({val: {'Yes': True, 'No': False}})
+            if silent == False:
+                print(val)
 
 def build_varlist(df, silent=True):
     dict_vars = {}
     varlist_temp(df, dict_vars, silent)
     varlist_power(df, dict_vars, silent)
-    varlist_bool(df, dict_vars, silent)
-    varlist_usage(df, dict_vars, silent)
+    varlist_usage(df, dict_vars, silent=False)
+    varlistfix_bool(df, dict_vars, silent)
     print(dict_vars)
 
 #define user-selectable input variables
