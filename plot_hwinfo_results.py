@@ -127,7 +127,7 @@ def varlistfix_bool(df, dict_vars, convert_bools=True, silent=True):
 
 #define user-selectable input variables
 
-filename = 'raw_data\lowramtest_E2000.CSV'
+filename = 'raw_data\E2000_lowramtest.CSV'
 date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 data = load_data(filename)
 
@@ -138,18 +138,33 @@ fig, ax1 = plt.subplots()
 ax1.scatter(data['Datetime'], data['Virtual Memory Load [%]'], s=3, c='blue', label = 'Virtual Memory')
 ax1.xaxis.set_major_formatter(date_fmt)
 ax1.set_ylabel('Memory Load / %')
-ax2 = ax1.twinx()
-ax2.scatter(data['Datetime'], data['Physical Memory Load [%]'], s=3, c='red', label = 'Physical Memory')
-# ax2.set_ylabel('Physical Memory Load / %')
+ax1.scatter(data['Datetime'], data['Physical Memory Load [%]'], s=3, c='red', label = 'Physical Memory')
+ax1.scatter(data['Datetime'], data['Page File Usage [%]'], s=3, c='green', label = 'Page File Usage')
 
 lines1, labels1 = ax1.get_legend_handles_labels()
-lines2, labels2 = ax2.get_legend_handles_labels()
-lines = lines1 + lines2
-labels = labels1 + labels2
-plt.legend(lines, labels, loc = 'upper right', scatterpoints = 7)
+# lines2, labels2 = ax2.get_legend_handles_labels()
+# lines = lines1 + lines2
+# labels = labels1 + labels2
+plt.legend(lines1, labels1, loc = 'upper right', scatterpoints = 7)
 
 plt.show()
 
+
+fig, ax1 = plt.subplots()
+ax1.scatter(data['Datetime'], data['Virtual Memory Committed [MB]'], s=3, c='blue', label = 'Virtual Memory (Committed)')
+ax1.xaxis.set_major_formatter(date_fmt)
+ax1.set_ylabel('Memory / MB')
+# ax2 = ax1.twinx()
+ax1.scatter(data['Datetime'], data['Physical Memory Used [MB]'], s=3, c='red', label = 'Physical Memory (Actual usage)')
+# ax2.set_ylabel('Physical Memory Load / %')
+
+lines1, labels1 = ax1.get_legend_handles_labels()
+# lines2, labels2 = ax2.get_legend_handles_labels()
+# lines = lines1 + lines2
+# labels = labels1 + labels2
+plt.legend(lines1, labels1, loc = 'upper right', scatterpoints = 7)
+
+plt.show()
 
 end = time.time()
 print("Program completed in "
