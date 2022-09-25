@@ -1,2 +1,2 @@
 # hwinfo_plotter
-Plot a HWiNFO.CSV export
+Plot a HWiNFO .CSV export
