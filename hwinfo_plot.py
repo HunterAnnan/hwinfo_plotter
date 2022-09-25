@@ -15,12 +15,13 @@ import hwinfo_import as hwim
 import matplotlib.pyplot as plt  #see https://matplotlib.org/
 import matplotlib.dates as mdate
 import time
+from pathlib import Path
 
 #####
 ##### Routinely changeable inputs:
 #####
 
-filename = 'raw_data\E2000_lowramtest.CSV'
+filename = Path("raw_data/E2000_lowramtest.CSV")
 date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 
 ##Variable selector:     'all' is normally OK unless you have a large number
@@ -28,7 +29,7 @@ date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 ##
 ## T = Temperatures,         P = Power/Voltage,
 ## % = Usage/Residencies,    X = Ratios,         B = Bools
-## all = all]
+## all = all
 
 var_types = ['all',
              # 'T',
@@ -48,7 +49,6 @@ data = hwim.load_data(filename, var_types, silent=False)
 
 start = time.time()
 
-
 # plt.close('all')
 # plt.rc('font', size=20)
 
@@ -63,7 +63,6 @@ start = time.time()
 # plt.legend(lines, labels, loc = 'upper right', scatterpoints = 7)
 
 # plt.show()
-
 
 end = time.time()
 print("Plots completed in a further "
