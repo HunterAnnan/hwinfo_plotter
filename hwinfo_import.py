@@ -69,12 +69,15 @@ def build_varlist(df, dict_vars, var_types=['all'], convert_bools=True, silent=T
             varlist_temp(df, dict_vars, silent)
     if 'all' in var_types or 'P' in var_types:
             varlist_power(df, dict_vars, silent)
+    if 'all' in var_types or 'C' in var_types:
+        varlist_clocks(df, dict_vars, silent)
     if 'all' in var_types or '%' in var_types:
         varlist_usage(df, dict_vars, silent)
     if 'all' in var_types or 'X' in var_types:
         varlist_ratios(df, dict_vars, silent)
     if 'all' in var_types or 'B' in var_types:
         varlistfix_bool(df, dict_vars, convert_bools, silent)
+
     print("Variable list built; data types mapped")
     return dict_vars
 
@@ -99,6 +102,22 @@ def varlist_power(df, dict_vars, silent=True):
     print("...mapping power & voltage variables")
     for i, val in enumerate(df.columns[:]):
         if '[w]' in str(val).lower() or '[v]' in str(val).lower():
+            if df.iloc[0,i].isdigit():
+                dict_vars[val] = "int64"
+            else:
+                dict_vars[val] = "float64"
+            if silent == False:
+                print(val)
+                
+def varlist_clocks(df, dict_vars, silent=True):
+    '''Clock speed data: 
+    Add clock speed variables from import .CSV to a dict with matched datatypes.\n
+    Use silent=False to print the variables.'''
+    print("...mapping clock speed variables")
+    for i, val in enumerate(df.columns[:]):
+        if ('[khz]' in str(val).lower() or
+            '[mhz]' in str(val).lower() or 
+            '[ghz]' in str(val).lower()):
             if df.iloc[0,i].isdigit():
                 dict_vars[val] = "int64"
             else:

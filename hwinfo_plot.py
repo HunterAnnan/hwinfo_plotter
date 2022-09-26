@@ -21,19 +21,20 @@ from pathlib import Path
 ##### Routinely changeable inputs:
 #####
 
-filename = Path("raw_data/E2000_lowramtest.CSV")
+filename = Path("raw_data/Owl_prime95.CSV")
 date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 
 ##Variable selector:     'all' is normally OK unless you have a large number
 ##                       columns/variables in your dataset
 ##
-## T = Temperatures,         P = Power/Voltage,
+## T = Temperatures,         P = Power/Voltage,  C = Clock speeds,
 ## % = Usage/Residencies,    X = Ratios,         B = Bools
 ## all = all
 
 var_types = ['all',
              # 'T',
              # 'P',
+             # 'C'
              # '%',
              # 'X',
              # 'B'
@@ -42,6 +43,7 @@ var_types = ['all',
 #####
 ##### End of routinely changeable inputs
 #####
+
 
 ## Import data from the above .CSV file
 ## Use silent = False to see a list of mapped variables
@@ -53,14 +55,19 @@ start = time.time()
 # plt.rc('font', size=20)
 
 # fig, ax = plt.subplots()
-# ax.scatter(data['Datetime'], data['Virtual Memory Load [%]'], s=3, c='blue', label = 'Virtual Memory')
+# ax.scatter(data['Datetime'], data['Core Temperatures (avg) [°C]'], s=3, c='blue', label = 'CPU Avg Core Temperature')
+# ax.scatter(data['Datetime'], data['Core Thermal Throttling (avg) [Yes/No]'], s=3, c='green', label = 'Therm Throt')
 # ax.xaxis.set_major_formatter(date_fmt)
-# ax.set_ylabel('Memory Load / %')
-# ax.scatter(data['Datetime'], data['Physical Memory Load [%]'], s=3, c='red', label = 'Physical Memory')
-# ax.scatter(data['Datetime'], data['Page File Usage [%]'], s=3, c='green', label = 'Page File Usage')
+# ax.set_ylabel('Temperature / \N{DEGREE SIGN}C')
+# ax2 = ax.twinx()
+# ax2.scatter(data['Datetime'], data['Core Effective Clocks (avg) [MHz]'], s=3, c='red', label = 'Core Clocks')
+# ax2.set_ylabel('Core Clocks / MHz')
+# ax2.set_ylim(0, 2050)
 
-# lines, labels = ax.get_legend_handles_labels()
-# plt.legend(lines, labels, loc = 'upper right', scatterpoints = 7)
+# lines1, labels1 = ax.get_legend_handles_labels()
+# lines2, labels2 = ax2.get_legend_handles_labels()
+# lines, labels = (lines1 + lines2), (labels1 + labels2)
+# plt.legend(lines, labels, loc = 'lower right', scatterpoints = 7)
 
 # plt.show()
 
