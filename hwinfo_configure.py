@@ -12,7 +12,14 @@ import json
 #think this needs to have some sort of "does a .json already exist...? If so,
 #import it and use it as a starting point...
 
-config_raw = {'filename' : None,
+cfg_filename = 'cfg.json'
+
+#look for an existing configuration: if it doesn't, set some defaults
+try:
+    with open(cfg_filename) as file_obj:
+        cfg = json.load(file_obj)
+except FileNotFoundError:
+    cfg = {'filename' : None,
               }
 
 # accept user input for filename & check for .csv extension
