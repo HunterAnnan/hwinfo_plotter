@@ -13,32 +13,40 @@ import json
 #import it and use it as a starting point...
 
 def main():
-    get_cfg()
+    cfg_filename = 'cfg.json'
+    cfg, proceed = get_cfg(cfg_filename)
+    if proceed == True:
+        print("Proceeding")
+        #some configuration happens here
+        json.dump(cfg, open(cfg_filename, 'w'))
 
-def qproc(message_start):
-    print(str(message_start)
-          + ("; do you wish to proceed with configuration?")
-          )
+def get_cfg(cfg_filename):
+    """Look for an existing config file: if none, set some defaults."""
+    proceed = True
+    try:
+        with open(cfg_filename) as f_obj:
+            cfg = json.load(f_obj)
+    except FileNotFoundError:
+        cfg = {'filename' : 'Test',
+                  }
+        print("No config file found. Defaults created:")
+        print(cfg)
+    else:
+        proceed = cfg_proceed(cfg)
+    return cfg, proceed
 
-    # """Look for an existing config file: if none, set some defaults.\n
-    # Returns a configuration dictionary, "cfg"."""
-    
-cfg_filename = 'cfg.json'
-
-f_obj = open(cfg_filename)
-cfg = json.load(f_obj)
-
-try:
-    with open(cfg_filename) as f_obj:
-        cfg = json.load(f_obj)
-except FileNotFoundError:
-    cfg = {'filename' : None,
-              }
-else:
-    qproc("Existing config file found")
-print(cfg)
-# return cfg
-
+def cfg_proceed(cfg):
+    print("Existing config file found:")
+    print(cfg)
+    proceed_str = input("Would you like to reconfigure? Y/N:\n")
+    proceed = False
+    if proceed_str.lower() == "y":
+        proceed = True
+    elif proceed_str.lower() == "n":#
+        print("Abandoning reconfiguration")
+    else:
+        print("Input not recognised: abandoning reconfiguration.")
+    return proceed
 
 # accept user input for filename & check for .csv extension
 
@@ -48,10 +56,6 @@ print(cfg)
 # else:
 #     cfg['filename'] = str(filename_temp + '.csv')
 
-cfg_file = open('cfg.json', 'w')
 
-json.dump(cfg, cfg_file)
-#some sort of save? 
-
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
