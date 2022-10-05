@@ -8,17 +8,9 @@ Tool for configuring the hwinfo_plot tool.
 """
 
 import json
+from pathlib import Path
 
-#think this needs to have some sort of "does a .json already exist...? If so,
-#import it and use it as a starting point...
-
-def main():
-    cfg_filename = 'cfg.json'
-    cfg, proceed = get_cfg(cfg_filename)
-    if proceed == True:
-        print("Proceeding")
-        #some configuration happens here
-        json.dump(cfg, open(cfg_filename, 'w'))
+import hwinfo_import as hwi
 
 def get_cfg(cfg_filename):
     """Look for an existing config file: if none, set some defaults."""
@@ -32,10 +24,10 @@ def get_cfg(cfg_filename):
         print("No config file found. Defaults created:")
         print(cfg)
     else:
-        proceed = cfg_proceed(cfg)
+        proceed = q_reconfig(cfg)
     return cfg, proceed
 
-def cfg_proceed(cfg):
+def q_reconfig(cfg):
     print("Existing config file found:")
     print(cfg)
     proceed_str = input("Would you like to reconfigure? Y/N:\n")
@@ -56,6 +48,13 @@ def cfg_proceed(cfg):
 # else:
 #     cfg['filename'] = str(filename_temp + '.csv')
 
-
 if __name__ == "__main__":
-    main()
+    filename = Path("raw_data/Owl_prime95.CSV") 
+    cfg_filename = 'cfg.json'
+    cfg, proceed = get_cfg(cfg_filename)
+    if proceed == True:
+        print("Proceeding")
+        dict_temp = hwi.test_load_data(filename, var_types=['all'], silent=True)
+        print(dict_temp)
+        #some configuration happens here
+        # json.dump(cfg, open(cfg_filename, 'w'))

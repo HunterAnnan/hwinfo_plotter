@@ -14,19 +14,51 @@ import time
 from warnings import simplefilter
 simplefilter(action="ignore",category=pd.errors.PerformanceWarning)
 
+def test_load_data(filename, var_types=['all'], silent=True):
+    '''Loads a sample of csv data into a pandas dataframe, then ...\n
+    Input expected: HWiNFO .CSV export'''
+    global dict_vars
+    try: #latin_1 (ISO-8859-1) seems to be the correct encoding for HWiNFO 7.26; other versions may differ
+        df = pd.read_csv(filename,
+                         encoding='latin_1',
+                         dtype='object',
+                         low_memory=False,
+                         nrows=3
+                         )
+    except UnicodeDecodeError:
+        df = pd.read_csv(filename,
+                         dtype='object',
+                         low_memory=False,
+                         nrows=3
+                         )
+        dict_vars = {}
+        dict_vars = build_varlist(df,
+                                  dict_vars, 
+                                  silent=silent, 
+                                  var_types=var_types
+                                  )
+    return dict_vars
+
 def load_data(filename, var_types=['all'], silent=True):
     '''Loads csv data into a pandas dataframe, then cleans it up\n
     Input expected: HWiNFO .CSV export'''
     print('Reading .CSV import')
     start = time.time()
     try: #latin_1 (ISO-8859-1) seems to be the correct encoding for HWiNFO 7.26; other versions may differ
-        df = pd.read_csv(filename, encoding='latin_1', dtype='object', low_memory=False)
+        df = pd.read_csv(filename,
+                         encoding='latin_1',
+                         dtype='object',
+                         low_memory=False
+                         )
     except UnicodeDecodeError:
-        df = pd.read_csv(filename, dtype='object', low_memory=False)
+        df = pd.read_csv(filename,
+                         dtype='object',
+                         low_memory=False
+                         )
     df = clean_footer(df) #should be handled by read_csv, but 'c' engine doesn't allow skipfooter
     ## after removing problem cols/rows, we re-interpret object types:
     df = clean_dates(df) #dates & times to datetime64
-    dict_vars={}
+    dict_vars = {}
     dict_vars = build_varlist(df,
                               dict_vars, 
                               silent=silent, 
