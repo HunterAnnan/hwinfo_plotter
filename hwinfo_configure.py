@@ -56,8 +56,8 @@ if __name__ == "__main__":
     if proceed == True:
         print("Proceeding")
         vars_dict = get_vars(filename, var_types=['all'], silent=True)
-        for index, key in enumerate(vars_dict):
-            vars_dict[index] = index
-            print(index, key)
+        vars_list = vars_dict.keys()
+        for i, var in enumerate(vars_list):
+            print(i, var)
         #some configuration happens here
         json.dump(cfg, open(cfg_filename, 'w'))
