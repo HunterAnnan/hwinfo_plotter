@@ -80,10 +80,20 @@ if __name__ == "__main__":
             
         proceed = q_cfg_item("variables")
         if proceed == True:
-            vars_dict = get_vars(filename, var_types=['all'], silent=True)
-            vars_list = vars_dict.keys()
-            for i, var in enumerate(vars_list):
+            full_vars_dict = get_vars(filename, var_types=['all'], silent=True)
+            full_vars_list = full_vars_dict.keys()
+            print("\n  Available variables:")
+            for i, var in enumerate(full_vars_list):
                 print(i, var)
                 
+        var_indices_str = input("\nInsert the variables you would like to plot, separated by commas:")
+        #####  This doesn't yet work...
+        # vars_indices_list = var_indices_str.replace(" ", "").split(",")
+        # vars_list = []
+        # for var in vars_indices_list:
+        #     vars_list.append(full_vars_list[var])
+        # 
+        # print(vars_list)
+        
         #some configuration happens here
         json.dump(cfg, open(cfg_filename, 'w'))
