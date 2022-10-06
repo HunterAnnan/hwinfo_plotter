@@ -52,11 +52,12 @@ if __name__ == "__main__":
     filename = Path("raw_data/Owl_prime95.CSV") 
     cfg_filename = 'cfg.json'
     cfg, proceed = get_cfg(cfg_filename)
+    
     if proceed == True:
         print("Proceeding")
         vars_dict = get_vars(filename, var_types=['all'], silent=True)
-        vars_dict['Datetime'] = 'datetime64[ns]'
-        for key, value in vars_dict.items():
-            print(key)
+        for index, key in enumerate(vars_dict):
+            vars_dict[index] = index
+            print(index, key)
         #some configuration happens here
-        # json.dump(cfg, open(cfg_filename, 'w'))
+        json.dump(cfg, open(cfg_filename, 'w'))
