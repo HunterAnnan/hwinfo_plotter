@@ -13,7 +13,9 @@ from pathlib import Path
 from hwinfo_import import test_load_data as get_vars
 
 def get_cfg(cfg_filename):
-    """Look for an existing config file: if none, set some defaults."""
+    """Look for an existing config file: if none, set some defaults.
+    Input: config filename
+    Outputs: config file (dict) & proceed bool"""
     proceed = True
     try:
         with open(cfg_filename) as f_obj:
@@ -28,36 +30,60 @@ def get_cfg(cfg_filename):
     return cfg, proceed
 
 def q_reconfig(cfg):
+    """Declares existing config file & asks user whether to proceed.
+    Outputs proceed bool"""
     print("Existing config file found:")
     print(cfg)
     proceed_str = input("Would you like to reconfigure? Y/N:\n")
     proceed = False
     if proceed_str.lower() == "y":
         proceed = True
+        print("Proceeding with reconfiguration...")
     elif proceed_str.lower() == "n":#
         print("Abandoning reconfiguration")
     else:
         print("Input not recognised: abandoning reconfiguration.")
     return proceed
 
-# accept user input for filename & check for .csv extension
+def q_cfg_item(item):
+    proceed_str = input("Reconfigure " + item + "? Y/N:\n")
+    proceed = False
+    flag = True
+    while flag == True:
+        if proceed_str.lower() == "y":
+            proceed = True
+            print("Configuring " + item + "...")
+            flag = False
+        elif proceed_str.lower() == "n":
+            print("Skipping configuration of " + item)
+            flag = False
+    return proceed
 
-# filename_temp = input('Enter the filename of the input CSV:\n')
-# if filename_temp.endswith('.csv'):
-#     cfg['filename'] = filename_temp
-# else:
-#     cfg['filename'] = str(filename_temp + '.csv')
+def cfg_input_filename():
+    """Accept input filename for .csv & check if there is a .csv extension"""
+    filename = input('Enter the filename of the input CSV:\n')
+    if filename.endswith('.csv'):
+        cfg['filename'] = filename
+    else:
+        cfg['filename'] = str(filename + '.csv')
 
 if __name__ == "__main__":
-    filename = Path("raw_data/Owl_prime95.CSV") 
     cfg_filename = 'cfg.json'
     cfg, proceed = get_cfg(cfg_filename)
     
     if proceed == True:
-        print("Proceeding")
-        vars_dict = get_vars(filename, var_types=['all'], silent=True)
-        vars_list = vars_dict.keys()
-        for i, var in enumerate(vars_list):
-            print(i, var)
+        filename = Path("raw_data/Owl_prime95.CSV")  #replace with some way to get this path...
+        
+        proceed = q_cfg_item("input filename")
+        if proceed == True:
+            cfg_input_filename() #adds new filename to .json
+            
+        proceed = q_cfg_item("variables")
+        if proceed == True:
+            vars_dict = get_vars(filename, var_types=['all'], silent=True)
+            vars_list = vars_dict.keys()
+            for i, var in enumerate(vars_list):
+                print(i, var)
+                
         #some configuration happens here
         json.dump(cfg, open(cfg_filename, 'w'))
