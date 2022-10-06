@@ -10,7 +10,7 @@ Tool for configuring the hwinfo_plot tool.
 import json
 from pathlib import Path
 
-import hwinfo_import as hwi
+from hwinfo_import import test_load_data as get_vars
 
 def get_cfg(cfg_filename):
     """Look for an existing config file: if none, set some defaults."""
@@ -54,7 +54,9 @@ if __name__ == "__main__":
     cfg, proceed = get_cfg(cfg_filename)
     if proceed == True:
         print("Proceeding")
-        dict_temp = hwi.test_load_data(filename, var_types=['all'], silent=True)
-        print(dict_temp)
+        vars_dict = get_vars(filename, var_types=['all'], silent=True)
+        vars_dict['Datetime'] = 'datetime64[ns]'
+        for key, value in vars_dict.items():
+            print(key)
         #some configuration happens here
         # json.dump(cfg, open(cfg_filename, 'w'))

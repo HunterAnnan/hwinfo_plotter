@@ -17,7 +17,6 @@ simplefilter(action="ignore",category=pd.errors.PerformanceWarning)
 def test_load_data(filename, var_types=['all'], silent=True):
     '''Loads a sample of csv data into a pandas dataframe, then ...\n
     Input expected: HWiNFO .CSV export'''
-    global dict_vars
     try: #latin_1 (ISO-8859-1) seems to be the correct encoding for HWiNFO 7.26; other versions may differ
         df = pd.read_csv(filename,
                          encoding='latin_1',
@@ -31,12 +30,12 @@ def test_load_data(filename, var_types=['all'], silent=True):
                          low_memory=False,
                          nrows=3
                          )
-        dict_vars = {}
-        dict_vars = build_varlist(df,
-                                  dict_vars, 
-                                  silent=silent, 
-                                  var_types=var_types
-                                  )
+    dict_vars = {}
+    dict_vars = build_varlist(df,
+                              dict_vars, 
+                              silent=silent, 
+                              var_types=var_types
+                              )
     return dict_vars
 
 def load_data(filename, var_types=['all'], silent=True):
@@ -97,6 +96,7 @@ def build_varlist(df, dict_vars, var_types=['all'], convert_bools=True, silent=T
     Use convert_bools=False to keep bool values as str.
     Use silent=False to print the variables.'''
     print("Building a list of variables & mapping data types")
+    
     if 'all' in var_types or 'T' in var_types:
             varlist_temp(df, dict_vars, silent)
     if 'all' in var_types or 'P' in var_types:
@@ -109,7 +109,7 @@ def build_varlist(df, dict_vars, var_types=['all'], convert_bools=True, silent=T
         varlist_ratios(df, dict_vars, silent)
     if 'all' in var_types or 'B' in var_types:
         varlistfix_bool(df, dict_vars, convert_bools, silent)
-
+        
     print("Variable list built; data types mapped")
     return dict_vars
 

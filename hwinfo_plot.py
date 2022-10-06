@@ -11,7 +11,7 @@ This must be run in the same directory as hwinfo_import.py.
 
 import hwinfo_import as hwim
 
-# import pandas as pd
+import pandas as pd
 import matplotlib.pyplot as plt  #see https://matplotlib.org/
 import matplotlib.dates as mdate
 import time
@@ -47,7 +47,7 @@ var_types = ['all',
 
 ## Import data from the above .CSV file
 ## Use silent = False to see a list of mapped variables
-data = hwim.load_data(filename, var_types, silent=False)
+data = hwim.load_data(filename, var_types, silent=True)
 
 start = time.time()
 
