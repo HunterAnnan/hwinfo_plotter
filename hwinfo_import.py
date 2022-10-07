@@ -36,7 +36,6 @@ def test_load_data(filename, var_types=['all'], silent=True):
                               silent=silent, 
                               var_types=var_types
                               )
-    dict_vars['Datetime'] = 'datetime64[ns]' #not ideal: hardcoding "Datetime" var
     return dict_vars
 
 def load_data(filename, var_types=['all'], silent=True):
