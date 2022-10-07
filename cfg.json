@@ -1,1 +1,8 @@
-{"filename": "test_filename.csv"}
+{
+    "filename": "test_input_filename.csv",
+    "vars": [
+        "Core 0 [\u00b0C]",
+        "Core Distance to TjMAX (avg) [\u00b0C]",
+        "Core 1 [\u00b0C]"
+    ]
+}

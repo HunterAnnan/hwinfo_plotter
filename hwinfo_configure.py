@@ -67,12 +67,38 @@ def cfg_input_filename():
     else:
         cfg['filename'] = str(filename + '.csv')
 
+def cfg_vars():
+    full_vars_list = list(get_vars
+                          (
+                              filename, var_types=['all'], silent=True).keys()
+                          )
+    # full_vars_list = list(full_vars_dict.keys())
+    print("\n  Available variables:")
+    for i, var in enumerate(full_vars_list):
+        print(i, var)
+    ## Ask for some variables to plot (referenced by number) ...
+    var_indices_str = input("\nInsert the variables you would like to plot, separated by commas:")
+    vars_indices_list = map(int,
+                            var_indices_str.replace(" ", "").split(",")
+                            )
+    ## ... then store as a list of variable names "vars_list" to be used later
+    vars_list = []
+    for var in vars_indices_list:
+        vars_list.append(full_vars_list[var])
+    cfg['vars'] = vars_list
+    # feed the variables stored back to the user
+    print("\nStoring the following variables for plotting:")
+    for var in vars_list:
+        print(var)
+
 if __name__ == "__main__":
     cfg_filename = 'cfg.json'
     cfg, proceed = get_cfg(cfg_filename)
     
     if proceed == True:
+        #REPLACE
         filename = Path("raw_data/Owl_prime95.CSV")  #replace with some way to get this path...
+        #REPLACE
         
         proceed = q_cfg_item("input filename")
         if proceed == True:
@@ -80,21 +106,7 @@ if __name__ == "__main__":
             
         proceed = q_cfg_item("variables")
         if proceed == True:
-            full_vars_dict = get_vars(filename, var_types=['all'], silent=True)
-            full_vars_list = list(full_vars_dict.keys())
-            print("\n  Available variables:")
-            for i, var in enumerate(full_vars_list):
-                print(i, var)
-                
-        var_indices_str = input("\nInsert the variables you would like to plot, separated by commas:")
-        #####  This doesn't yet work...
-        vars_indices_list = var_indices_str.replace(" ", "").split(",")
-        vars_indices_list = map(int, vars_indices_list)
-        vars_list = []
-        for var in vars_indices_list:
-            vars_list.append(full_vars_list[var])
-        
-        print(vars_list)
+            cfg_vars() #adds list of variables to plot to .json
         
         #some configuration happens here
-        json.dump(cfg, open(cfg_filename, 'w'))
+        json.dump(cfg, open(cfg_filename, 'w'), indent=4)
