@@ -1,8 +1,8 @@
 {
-    "filename": "test_input_filename.csv",
+    "filename": "Owl_prime95.csv",
     "vars": [
         "Core 0 [\u00b0C]",
         "Core Distance to TjMAX (avg) [\u00b0C]",
-        "Core 1 [\u00b0C]"
+        "Core 3 Clock [MHz]"
     ]
 }

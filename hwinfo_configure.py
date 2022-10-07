@@ -70,7 +70,7 @@ def cfg_input_filename():
 def cfg_vars():
     full_vars_list = list(get_vars
                           (
-                              filename, var_types=['all'], silent=True).keys()
+                              input_filename, var_types=['all'], silent=True).keys()
                           )
     # full_vars_list = list(full_vars_dict.keys())
     print("\n  Available variables:")
@@ -96,13 +96,13 @@ if __name__ == "__main__":
     cfg, proceed = get_cfg(cfg_filename)
     
     if proceed == True:
-        #REPLACE
-        filename = Path("raw_data/Owl_prime95.CSV")  #replace with some way to get this path...
-        #REPLACE
         
         proceed = q_cfg_item("input filename")
         if proceed == True:
             cfg_input_filename() #adds new filename to .json
+        
+        #defines an input filename for cfg_vars() to use
+        input_filename = str("raw_data/" + cfg['filename'])
             
         proceed = q_cfg_item("variables")
         if proceed == True:
