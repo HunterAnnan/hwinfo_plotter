@@ -2,6 +2,8 @@
 """
 Tool for importing information recorded by HWiNFO. The expected input is a CSV file from HWiNFO.
 
+Not intended to be run alone.
+
 @author: Hunter.Annan
 """
 

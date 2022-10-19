@@ -77,7 +77,8 @@ def cfg_vars_to_plot():
     for i, var in enumerate(full_vars_list):
         print(i, var)
     ## Ask for some variables to plot (referenced by number) ...
-    var_indices_str = input("\nInsert the variables you would like to plot, separated by commas:")
+    var_indices_str = input("\nEnter the variable(s) you would like from the list above." +
+                            "\nUse the index numbers, separated by commas:\n")
     vars_indices_list = map(int,
                             var_indices_str.replace(" ", "").split(",")
                             )
@@ -87,7 +88,10 @@ def cfg_vars_to_plot():
         vars_list.append(full_vars_list[var])
     cfg['vars'] = vars_list
     # feed the variables stored back to the user
-    print("\nStoring the following variables for plotting:")
+    if len(vars_list) == 1:
+        print("\nStoring the following variable for plotting:")
+    else:
+        print("\nStoring the following variables for plotting:")
     for var in vars_list:
         print(var)
 
