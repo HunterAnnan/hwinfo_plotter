@@ -15,41 +15,46 @@ import pandas as pd
 import matplotlib.pyplot as plt  #see https://matplotlib.org/
 import matplotlib.dates as mdate
 import time
+import json
 from pathlib import Path
 
-#####
-##### Routinely changeable inputs:
-#####
+def get_cfg_file():
+    """Looks for 'cfg.json' and returns the configuration as a dict."""
+    try:
+        with open('cfg.json') as f_obj:
+            cfg_dict = json.load(f_obj)
+    except FileNotFoundError:
+        print("No config file found. Please run the configuration tool.")
+    return cfg_dict
 
-filename = Path("raw_data/Owl_prime95.CSV")
+def get_data_filename_from_cfg(cfg_dict):
+    data_filename = cfg_dict['filename']
+    print(data_filename)
+    return data_filename
+
+def direct_to_raw_data_folder(filename):
+    filepath_str = "raw_data/" + filename
+    filepath = Path(filepath_str)
+    return filepath
+
 date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 
-##Variable selector:     'all' is normally OK unless you have a large number
-##                       columns/variables in your dataset
-##
-## T = Temperatures,         P = Power/Voltage,  C = Clock speeds,
-## % = Usage/Residencies,    X = Ratios,         B = Bools
-## all = all
+if __name__ == "__main__":
 
-var_types = ['all',
-             # 'T',
-             # 'P',
-             # 'C'
-             # '%',
-             # 'X',
-             # 'B'
-             ]
-
-#####
-##### End of routinely changeable inputs
-#####
-
-
-## Import data from the above .CSV file
-## Use silent = False to see a list of mapped variables
-data = hwim.load_data(filename, var_types, silent=True)
-
+    #Find config file, identify data filename from it, then form a filepath.
+    filepath = direct_to_raw_data_folder(
+        get_data_filename_from_cfg(
+            get_cfg_file(
+                )
+            )
+        )
+    
+    # does load_data need to do whatever it does with parsing datatypes,
+    # if the configurator has already run?
+    data = hwim.load_data(filepath, 'all', silent=True)
+    
 start = time.time()
+
 
 # plt.close('all')
 # plt.rc('font', size=20)
@@ -70,6 +75,7 @@ start = time.time()
 # plt.legend(lines, labels, loc = 'lower right', scatterpoints = 7)
 
 # plt.show()
+
 
 end = time.time()
 print("Plots completed in a further "
