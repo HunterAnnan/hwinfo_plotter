@@ -42,6 +42,7 @@ def get_vars_to_plot_from_cfg(config_dict):
     vars_list = config_dict['vars']
     return vars_list
 
+#hardcoded v bad
 date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 
 if __name__ == "__main__":
@@ -55,19 +56,33 @@ if __name__ == "__main__":
             )
         )
     
-    #get a list of variables to plot
+    #Get a list of variables to plot
     vars_list = get_vars_to_plot_from_cfg(config_dict)
     
-    # does load_data need to do whatever it does with parsing datatypes,
-    # if the configurator has already run? i.e. is 'all' needed here?
+    #Load in and clean the data to be plotted
+    ## does load_data need to do whatever it does with parsing datatypes,
+    ## if the configurator has already run? i.e. is 'all' needed here?
     data = hwim.load_data(data_filepath, 'all', silent=True)
     
-start = time.time()
-
-
-# plt.close('all')
-# plt.rc('font', size=20)
-
+    start = time.time()
+    
+    plt.close('all')
+    plt.rc('font', size=20)
+    
+    for var in vars_list:
+        fig, ax = plt.subplots()
+        ax.scatter(data['Datetime'], data[var], s=3)
+        ax.xaxis.set_major_formatter(date_fmt)
+        ax.set_ylabel(var)
+        plt.show()
+    
+    end = time.time()
+    print("Plots completed in a further "
+          + str(round(end-start, 4))
+          + " seconds."
+          )
+    
+###example of a multi-plot
 # fig, ax = plt.subplots()
 # ax.scatter(data['Datetime'], data['Core Temperatures (avg) [°C]'], s=3, c='blue', label = 'CPU Avg Core Temperature')
 # ax.scatter(data['Datetime'], data['Core Thermal Throttling (avg) [Yes/No]'], s=3, c='green', label = 'Therm Throt')
@@ -84,10 +99,3 @@ start = time.time()
 # plt.legend(lines, labels, loc = 'lower right', scatterpoints = 7)
 
 # plt.show()
-
-
-end = time.time()
-print("Plots completed in a further "
-      + str(round(end-start, 4))
-      + " seconds."
-      )

@@ -21,7 +21,8 @@ def get_cfg(cfg_filename):
         with open(cfg_filename) as f_obj:
             cfg = json.load(f_obj)
     except FileNotFoundError:
-        cfg = {'filename' : 'Test',
+        cfg = {'filename' : None,
+               'variables' : None,
                   }
         print("No config file found. Defaults created:")
         print(cfg)
@@ -33,7 +34,8 @@ def q_reconfig(existing_cfg_file):
     """Declares existing config file & asks user whether to proceed.
     Outputs proceed bool"""
     print("Existing config file found:")
-    print(existing_cfg_file)
+    for key, val in existing_cfg_file.items():
+        print(f"{key.title() + ':  ':<15}" + str(val))
     proceed_str = input("Would you like to reconfigure? Y/N:\n")
     proceed = False
     if proceed_str.lower() == "y":
@@ -86,7 +88,7 @@ def cfg_vars_to_plot():
     vars_list = []
     for var in vars_indices_list:
         vars_list.append(full_vars_list[var])
-    cfg['vars'] = vars_list
+    cfg['variables'] = vars_list
     # feed the variables stored back to the user
     if len(vars_list) == 1:
         print("\nStoring the following variable for plotting:")
