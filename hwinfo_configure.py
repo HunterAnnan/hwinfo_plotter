@@ -29,11 +29,11 @@ def get_cfg(cfg_filename):
         proceed = q_reconfig(cfg)
     return cfg, proceed
 
-def q_reconfig(cfg):
+def q_reconfig(existing_cfg_file):
     """Declares existing config file & asks user whether to proceed.
     Outputs proceed bool"""
     print("Existing config file found:")
-    print(cfg)
+    print(existing_cfg_file)
     proceed_str = input("Would you like to reconfigure? Y/N:\n")
     proceed = False
     if proceed_str.lower() == "y":
@@ -45,29 +45,29 @@ def q_reconfig(cfg):
         print("Input not recognised: abandoning reconfiguration.")
     return proceed
 
-def q_cfg_item(item):
-    proceed_str = input("Reconfigure " + item + "? Y/N:\n")
+def q_cfg_item(configurable_item):
+    proceed_str = input("Reconfigure " + configurable_item + "? Y/N:\n")
     proceed = False
     flag = True
     while flag == True:
         if proceed_str.lower() == "y":
             proceed = True
-            print("Configuring " + item + "...")
+            print("Configuring " + configurable_item + "...")
             flag = False
         elif proceed_str.lower() == "n":
-            print("Skipping configuration of " + item)
+            print("Skipping configuration of " + configurable_item)
             flag = False
     return proceed
 
-def cfg_input_filename():
+def cfg_input_CSV_filename():
     """Accept input filename for .csv & check if there is a .csv extension"""
-    filename = input('Enter the filename of the input CSV:\n')
-    if filename.endswith('.csv'):
-        cfg['filename'] = filename
+    input_CSV_filename = input('Enter the filename of the input CSV:\n')
+    if input_CSV_filename.lower().endswith('.csv'):
+        cfg['filename'] = input_CSV_filename
     else:
-        cfg['filename'] = str(filename + '.csv')
+        cfg['filename'] = str(input_CSV_filename + '.csv')
 
-def cfg_vars():
+def cfg_vars_to_plot():
     full_vars_list = list(get_vars
                           (
                               input_filename, var_types=['all'], silent=True).keys()
@@ -99,14 +99,14 @@ if __name__ == "__main__":
         
         proceed = q_cfg_item("input filename")
         if proceed == True:
-            cfg_input_filename() #adds new filename to .json
+            cfg_input_CSV_filename() #adds new filename to .json
         
-        #defines an input filename for cfg_vars() to use
+        #defines an input filename for cfg_vars_to_plot() to use
         input_filename = str("raw_data/" + cfg['filename'])
             
         proceed = q_cfg_item("variables")
         if proceed == True:
-            cfg_vars() #adds list of variables to plot to .json
+            cfg_vars_to_plot() #adds list of variables to plot to .json
         
         #some configuration happens here
         json.dump(cfg, open(cfg_filename, 'w'), indent=4)
