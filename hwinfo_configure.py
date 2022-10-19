@@ -8,7 +8,6 @@ Tool for configuring the hwinfo_plot tool.
 """
 
 import json
-from pathlib import Path
 
 from hwinfo_import import test_load_data as get_vars
 

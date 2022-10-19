@@ -39,7 +39,7 @@ def direct_to_raw_data_folder(filename):
     return filepath
 
 def get_vars_to_plot_from_cfg(config_dict):
-    vars_list = config_dict['vars']
+    vars_list = config_dict['variables']
     return vars_list
 
 #hardcoded v bad
