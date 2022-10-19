@@ -22,14 +22,15 @@ def get_cfg_file():
     """Looks for 'cfg.json' and returns the configuration as a dict."""
     try:
         with open('cfg.json') as f_obj:
-            cfg_dict = json.load(f_obj)
+            config_dict = json.load(f_obj)
     except FileNotFoundError:
         print("No config file found. Please run the configuration tool.")
-    return cfg_dict
+    else:
+        print("Configuration file loaded successfully")
+        return config_dict
 
-def get_data_filename_from_cfg(cfg_dict):
-    data_filename = cfg_dict['filename']
-    print(data_filename)
+def get_data_filename_from_cfg(config_dict):
+    data_filename = config_dict['filename']
     return data_filename
 
 def direct_to_raw_data_folder(filename):
@@ -37,21 +38,29 @@ def direct_to_raw_data_folder(filename):
     filepath = Path(filepath_str)
     return filepath
 
+def get_vars_to_plot_from_cfg(config_dict):
+    vars_list = config_dict['vars']
+    return vars_list
+
 date_fmt = mdate.DateFormatter('%H%M\n(%d %b)')
 
 if __name__ == "__main__":
 
+    config_dict = get_cfg_file()
+
     #Find config file, identify data filename from it, then form a filepath.
-    filepath = direct_to_raw_data_folder(
+    data_filepath = direct_to_raw_data_folder(
         get_data_filename_from_cfg(
-            get_cfg_file(
-                )
+            config_dict
             )
         )
     
+    #get a list of variables to plot
+    vars_list = get_vars_to_plot_from_cfg(config_dict)
+    
     # does load_data need to do whatever it does with parsing datatypes,
-    # if the configurator has already run?
-    data = hwim.load_data(filepath, 'all', silent=True)
+    # if the configurator has already run? i.e. is 'all' needed here?
+    data = hwim.load_data(data_filepath, 'all', silent=True)
     
 start = time.time()
 
