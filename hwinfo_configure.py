@@ -47,10 +47,10 @@ def q_reconfig(existing_cfg_file):
     return proceed
 
 def q_cfg_item(configurable_item):
-    proceed_str = input("Reconfigure " + configurable_item + "? Y/N:\n")
     proceed = False
     flag = True
     while flag == True:
+        proceed_str = input("Reconfigure " + configurable_item + "? Y/N:\n")
         if proceed_str.lower() == "y":
             proceed = True
             print("Configuring " + configurable_item + "...")
@@ -58,6 +58,8 @@ def q_cfg_item(configurable_item):
         elif proceed_str.lower() == "n":
             print("Skipping configuration of " + configurable_item)
             flag = False
+        else:
+            print("\nInvalid input.")
     return proceed
 
 def cfg_input_CSV_filename():

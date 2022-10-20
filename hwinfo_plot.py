@@ -11,7 +11,7 @@ This must be run in the same directory as hwinfo_import.py.
 
 import hwinfo_import as hwim
 
-import pandas as pd
+# import pandas as pd
 import matplotlib.pyplot as plt  #see https://matplotlib.org/
 import matplotlib.dates as mdate
 import time
