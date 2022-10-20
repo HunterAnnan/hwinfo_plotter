@@ -70,7 +70,7 @@ def cfg_input_CSV_filename():
     else:
         cfg['filename'] = str(input_CSV_filename + '.csv')
 
-def cfg_vars_to_plot():
+def cfg_single_vars_to_plot():
     full_vars_list = list(get_vars
                           (
                               input_filename, var_types=['all'], silent=True).keys()
@@ -80,7 +80,8 @@ def cfg_vars_to_plot():
     for i, var in enumerate(full_vars_list):
         print(i, var)
     ## Ask for some variables to plot (referenced by number) ...
-    var_indices_str = input("\nEnter the variable(s) you would like from the list above." +
+    var_indices_str = input("\n  Single Variable-Time Plots:" +
+                            "\nEnter the variable(s) you would like from the list above." +
                             "\nUse the index numbers, separated by commas:\n")
     vars_indices_list = map(int,
                             var_indices_str.replace(" ", "").split(",")
@@ -108,12 +109,12 @@ if __name__ == "__main__":
         if proceed == True:
             cfg_input_CSV_filename() #adds new filename to .json
         
-        #defines an input filename for cfg_vars_to_plot() to use
+        #defines an input filename for cfg_single_vars_to_plot() to use
         input_filename = str("raw_data/" + cfg['filename'])
             
         proceed = q_cfg_item("variables")
         if proceed == True:
-            cfg_vars_to_plot() #adds list of variables to plot to .json
+            cfg_single_vars_to_plot() #adds list of variables to plot to .json
         
         #some configuration happens here
         json.dump(cfg, open(cfg_filename, 'w'), indent=4)
