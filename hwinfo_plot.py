@@ -74,6 +74,7 @@ if __name__ == "__main__":
         ax.scatter(data['Datetime'], data[var], s=3)
         ax.xaxis.set_major_formatter(date_fmt)
         ax.set_ylabel(var)
+        plt.tight_layout()
         plt.show()
     
     end = time.time()
