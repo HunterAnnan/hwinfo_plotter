@@ -46,14 +46,25 @@ def load_data(filename, var_types=['all'], silent=True):
     print('Reading .CSV import')
     start = time.time()
     try: #latin_1 (ISO-8859-1) seems to be the correct encoding for HWiNFO 7.26; other versions may differ
+        cols = len(pd.read_csv(filename,
+                         encoding='latin_1',
+                         low_memory=False,
+                         nrows = 1).columns
+                   )
         df = pd.read_csv(filename,
                          encoding='latin_1',
                          dtype='object',
+                         usecols = range(cols),
                          low_memory=False
                          )
     except UnicodeDecodeError:
+        cols = len(pd.read_csv(filename,
+                         low_memory=False,
+                         nrows = 1)
+                   )
         df = pd.read_csv(filename,
                          dtype='object',
+                         usecols = range(cols),
                          low_memory=False
                          )
     df = clean_footer(df) #should be handled by read_csv, but 'c' engine doesn't allow skipfooter
